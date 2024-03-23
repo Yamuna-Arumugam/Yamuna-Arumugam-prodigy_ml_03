@@ -1,0 +1,56 @@
+Certainly! Below is an example Python code using the `scikit-learn` library to implement a Support Vector Machine (SVM) for classifying images of cats and dogs from a Kaggle dataset:
+
+```python
+import numpy as np
+import os
+from skimage.io import imread
+from skimage.transform import resize
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+# Load images and labels from the dataset
+def load_data(folder):
+    images = []
+    labels = []
+    for filename in os.listdir(folder):
+        if filename.startswith("cat"):
+            label = 0  # Assigning label 0 for cats
+        elif filename.startswith("dog"):
+            label = 1  # Assigning label 1 for dogs
+        else:
+            continue
+        img = imread(os.path.join(folder, filename))
+        img_resized = resize(img, (100, 100))  # Resize image to a fixed size
+        images.append(img_resized.flatten())   # Flatten the image array
+        labels.append(label)
+    return np.array(images), np.array(labels)
+
+# Path to the dataset directory
+dataset_path = "/path/to/kaggle_dataset/"
+
+# Load images and labels
+images, labels = load_data(dataset_path)
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
+
+# Initialize and train the SVM model
+svm_model = SVC(kernel='linear', random_state=42)
+svm_model.fit(X_train, y_train)
+
+# Predict labels for the test set
+y_pred = svm_model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+```
+
+In this code:
+- We define a function `load_data` to load images from the dataset folder and assign labels (0 for cats, 1 for dogs).
+- We load images and labels using the `load_data` function.
+- We split the data into training and testing sets using `train_test_split`.
+- We initialize an SVM model with a linear kernel and train it using the training data.
+- We predict labels for the test set using the trained SVM model.
+- Finally, we calculate the accuracy of the model using `accuracy_score`.
